@@ -24,4 +24,4 @@ RUN git submodule update --init --recursive
 RUN python3 -m pip install -r requirements.txt
 
 EXPOSE 5555 9098
-CMD ["python3", "main.py"]
+CMD ["python3", "server_main.py", "&&", "python3", "engine_main.py"]
