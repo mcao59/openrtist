@@ -62,6 +62,8 @@ class OpenrtistEngine(cognitive_engine.Engine):
         if from_client.payload_type != gabriel_pb2.PayloadType.IMAGE:
             return cognitive_engine.wrong_input_format_error(from_client.frame_id)
 
+        msg_recv_time = time.time()
+
         engine_fields = cognitive_engine.unpack_engine_fields(
             openrtist_pb2.EngineFields, from_client
         )
