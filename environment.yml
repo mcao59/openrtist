@@ -25,6 +25,7 @@ dependencies:
   - libxcb=1.13=h1bed415_1
   - libxml2=2.9.9=hea5a465_1
   - ncurses=6.1=he6710b0_1
+  - openssl=1.1.1d=h516909a_0
   - pcre=8.43=he6710b0_0
   - pip=19.3.1=py37_0
   - pyqt=5.9.2=py37h05f1152_2
@@ -39,12 +40,9 @@ dependencies:
   - xz=5.2.4=h14c3975_4
   - zlib=1.2.11=h7b6447c_3
   - pip:
-    - gabriel-client==0.0.4
-    - gabriel-protocol==0.0.3
-    - gabriel-server==0.0.9
     - numpy==1.18.1
     - opencv-python==4.1.2.30
-    - pillow==7.0.0
+    - pillow==6.1.0
     - protobuf==3.11.2
     - py-cpuinfo==5.0.0
     - pyqt5==5.14.1

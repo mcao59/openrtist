@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gabriel_client.opencv_adapter import OpencvAdapter
+from openrtist_adapter import OpencvAdapter
 from openrtist_protocol import openrtist_pb2
 import cv2
 import config
@@ -40,6 +40,7 @@ class Adapter:
         preprocess,
         consume_frame_style,
         video_capture,
+        framerate=30,
         start_style=config.START_STYLE_STRING,
     ):
         """
@@ -83,5 +84,6 @@ class Adapter:
             produce_engine_fields,
             consume_frame,
             video_capture,
+            framerate,
             config.ENGINE_NAME,
         )
