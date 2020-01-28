@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='openrtist.proto',
   package='openrtist',
   syntax='proto3',
-  serialized_pb=_b('\n\x0fopenrtist.proto\x12\topenrtist\"\xe1\x01\n\x0c\x45ngineFields\x12\r\n\x05style\x18\x01 \x01(\t\x12:\n\nstyle_list\x18\x02 \x03(\x0b\x32&.openrtist.EngineFields.StyleListEntry\x12\x37\n\x0bstyle_image\x18\x03 \x01(\x0b\x32\".openrtist.EngineFields.BytesValue\x1a\x1b\n\nBytesValue\x12\r\n\x05value\x18\x01 \x01(\x0c\x1a\x30\n\x0eStyleListEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x1e\n\x14\x65\x64u.cmu.cs.openrtistB\x06Protosb\x06proto3')
+  serialized_pb=_b('\n\x0fopenrtist.proto\x12\topenrtist\"\xc7\x02\n\x0c\x45ngineFields\x12\r\n\x05style\x18\x01 \x01(\t\x12:\n\nstyle_list\x18\x02 \x03(\x0b\x32&.openrtist.EngineFields.StyleListEntry\x12\x37\n\x0bstyle_image\x18\x03 \x01(\x0b\x32\".openrtist.EngineFields.BytesValue\x12\x36\n\ntimestamps\x18\x04 \x01(\x0b\x32\".openrtist.EngineFields.Timestamps\x1a\x1b\n\nBytesValue\x12\r\n\x05value\x18\x01 \x01(\x0c\x1a,\n\nTimestamps\x12\x10\n\x08received\x18\x01 \x01(\x01\x12\x0c\n\x04sent\x18\x02 \x01(\x01\x1a\x30\n\x0eStyleListEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x1e\n\x14\x65\x64u.cmu.cs.openrtistB\x06Protosb\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -52,8 +52,45 @@ _ENGINEFIELDS_BYTESVALUE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=179,
-  serialized_end=206,
+  serialized_start=235,
+  serialized_end=262,
+)
+
+_ENGINEFIELDS_TIMESTAMPS = _descriptor.Descriptor(
+  name='Timestamps',
+  full_name='openrtist.EngineFields.Timestamps',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='received', full_name='openrtist.EngineFields.Timestamps.received', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='sent', full_name='openrtist.EngineFields.Timestamps.sent', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=264,
+  serialized_end=308,
 )
 
 _ENGINEFIELDS_STYLELISTENTRY = _descriptor.Descriptor(
@@ -89,8 +126,8 @@ _ENGINEFIELDS_STYLELISTENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=208,
-  serialized_end=256,
+  serialized_start=310,
+  serialized_end=358,
 )
 
 _ENGINEFIELDS = _descriptor.Descriptor(
@@ -121,10 +158,17 @@ _ENGINEFIELDS = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='timestamps', full_name='openrtist.EngineFields.timestamps', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[_ENGINEFIELDS_BYTESVALUE, _ENGINEFIELDS_STYLELISTENTRY, ],
+  nested_types=[_ENGINEFIELDS_BYTESVALUE, _ENGINEFIELDS_TIMESTAMPS, _ENGINEFIELDS_STYLELISTENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -134,13 +178,15 @@ _ENGINEFIELDS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=31,
-  serialized_end=256,
+  serialized_end=358,
 )
 
 _ENGINEFIELDS_BYTESVALUE.containing_type = _ENGINEFIELDS
+_ENGINEFIELDS_TIMESTAMPS.containing_type = _ENGINEFIELDS
 _ENGINEFIELDS_STYLELISTENTRY.containing_type = _ENGINEFIELDS
 _ENGINEFIELDS.fields_by_name['style_list'].message_type = _ENGINEFIELDS_STYLELISTENTRY
 _ENGINEFIELDS.fields_by_name['style_image'].message_type = _ENGINEFIELDS_BYTESVALUE
+_ENGINEFIELDS.fields_by_name['timestamps'].message_type = _ENGINEFIELDS_TIMESTAMPS
 DESCRIPTOR.message_types_by_name['EngineFields'] = _ENGINEFIELDS
 
 EngineFields = _reflection.GeneratedProtocolMessageType('EngineFields', (_message.Message,), dict(
@@ -149,6 +195,13 @@ EngineFields = _reflection.GeneratedProtocolMessageType('EngineFields', (_messag
     DESCRIPTOR = _ENGINEFIELDS_BYTESVALUE,
     __module__ = 'openrtist_pb2'
     # @@protoc_insertion_point(class_scope:openrtist.EngineFields.BytesValue)
+    ))
+  ,
+
+  Timestamps = _reflection.GeneratedProtocolMessageType('Timestamps', (_message.Message,), dict(
+    DESCRIPTOR = _ENGINEFIELDS_TIMESTAMPS,
+    __module__ = 'openrtist_pb2'
+    # @@protoc_insertion_point(class_scope:openrtist.EngineFields.Timestamps)
     ))
   ,
 
@@ -164,6 +217,7 @@ EngineFields = _reflection.GeneratedProtocolMessageType('EngineFields', (_messag
   ))
 _sym_db.RegisterMessage(EngineFields)
 _sym_db.RegisterMessage(EngineFields.BytesValue)
+_sym_db.RegisterMessage(EngineFields.Timestamps)
 _sym_db.RegisterMessage(EngineFields.StyleListEntry)
 
 

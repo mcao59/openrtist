@@ -13,7 +13,13 @@ message EngineFields {
         bytes value = 1;
     }
 
+    message Timestamps {
+        double received = 1;
+        double sent = 2;
+    }
+
     string style = 1;
     map<string, string> style_list = 2;
     BytesValue style_image = 3;
+    Timestamps timestamps = 4;
 }

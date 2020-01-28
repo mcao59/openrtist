@@ -1,5 +1,6 @@
-from gabriel_client.timing_client import TimingClient
 from gabriel_client.server_comm import WebsocketClient
+from openrtist_timing import TimingClient
+#from timing_client import TimingClient
 from adapter import Adapter
 import config
 import cv2
@@ -24,11 +25,25 @@ def main():
     parser.add_argument(
         "--fps", action="store", dest='fps', type=int, default=30, help="Camera fps"
     )
+    parser.add_argument(
+        "--resolution", action="store", dest='resolution', type=int, default=360, help="Image resolution"
+    )
 
     args = parser.parse_args()
 
+
     def preprocess(frame):
+        frame = cv2.resize(frame, dimension)
         return frame
+
+    def fetch_w_h(res):
+        switcher = {
+            240: (352, 240),
+            360: (480, 360),
+            480: (858, 480),
+            720: (1280, 720),
+        }
+        return switcher.get(res, (352, 240))
 
     if args.display:
 
@@ -45,6 +60,7 @@ def main():
         print("Wrong Input Path")
         sys.exit()
 
+    dimension = fetch_w_h(args.resolution)
     video_capture = cv2.VideoCapture(os.path.join(args.input_dir, "frame-%06d.png"))
     video_capture.set(cv2.CAP_PROP_FPS, args.fps)
 
@@ -52,7 +68,7 @@ def main():
 
     if args.timing:
         timing_client = TimingClient(
-            args.server_ip, config.PORT, adapter.producer, adapter.consumer
+            args.server_ip, config.PORT, adapter.producer, adapter.consumer, args.resolution
         )
         try:
             timing_client.launch()

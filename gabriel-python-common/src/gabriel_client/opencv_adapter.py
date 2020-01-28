@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class OpencvAdapter:
     def __init__(self, preprocess, produce_engine_fields, consume_frame,
-                 video_capture, framerate, engine_name):
+                 video_capture, engine_name):
         '''
         preprocess should take a one frame parameter
         produce_engine_fields should take no parameters
@@ -23,20 +23,17 @@ class OpencvAdapter:
         self.consume_frame = consume_frame
         self.video_capture = video_capture
         self.engine_name = engine_name
+        print(video_capture.get(cv2.CAP_PROP_FPS))
+        self.timeout = int((1.0/video_capture.get(cv2.CAP_PROP_FPS)) * 1000)
+        print(self.timeout)
         self.frame_time = 0
-        self.compression = [cv2.IMWRITE_JPEG_QUALITY, 67] #[int(cv2.IMWRITE_JPEG_QUALITY), 67]
-        #self.dimension = (360, 480)
-        #if 'dimension' in kwargs:
-        #    self.dimension = kwargs['dimension']
-        #framerate = 30
-        #if 'framerate' in kwargs:
-        #    framerate = kwargs['framerate']
-        self.timeout = int((1.0/framerate) * 1000)
 
     def producer(self):
         
         while int(1000*(time.time() - self.frame_time)) < self.timeout:
             continue
+
+        print("Elapsed {} Timeout {}".format((time.time() - self.frame_time), self.timeout))
 
         _, frame = self.video_capture.read()
         if frame is None:
@@ -44,15 +41,17 @@ class OpencvAdapter:
         self.frame_time = time.time() 
 
         frame = self.preprocess(frame)
-        _, jpeg_frame=cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 67])#self.compression)
+        _, jpeg_frame=cv2.imencode('.jpg', frame)
 
         from_client = gabriel_pb2.FromClient()
         from_client.payload_type = gabriel_pb2.PayloadType.IMAGE
         from_client.engine_name = self.engine_name
         from_client.payload = jpeg_frame.tostring()
+
         engine_fields = self.produce_engine_fields()
         if engine_fields is not None:
             from_client.engine_fields.Pack(engine_fields)
+
         return from_client
 
     def consumer(self, result_wrapper):
@@ -62,6 +61,7 @@ class OpencvAdapter:
                 if result.engine_name == self.engine_name:
                     np_data = np.fromstring(result.payload, dtype=np.uint8)
                     frame = cv2.imdecode(np_data, cv2.IMREAD_COLOR)
+
                     self.consume_frame(frame, result_wrapper.engine_fields)
                 else:
                     logger.error('Got result from engine %s',

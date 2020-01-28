@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package gabriel;
+
+import "google/protobuf/any.proto";
+
+option java_package = "edu.cmu.cs.gabriel.protocol";
+option java_outer_classname = "Protos";
+
+enum PayloadType {
+    IMAGE = 0;
+    VIDEO = 1;
+    AUDIO = 2;
+    ACCELEROMETER = 3;
+    TEXT = 4;
+    ANIMATION = 5;
+}
+
+message Timestamps {
+     double received = 1;
+     double sent = 2;
+}
+
+message FromClient {
+    int64 frame_id = 1;
+    PayloadType payload_type = 2;
+    string engine_name = 3;
+    bytes payload = 4;
+    Timestamps timestamps = 5;
+    google.protobuf.Any engine_fields = 6;
+}
+
+message ResultWrapper {
+    enum Status {
+        SUCCESS = 0;
+        WELCOME_MESSAGE = 1;
+        UNSPECIFIED_ERROR = 2;
+        WRONG_INPUT_FORMAT = 3;
+        REQUESTED_ENGINE_NOT_AVAILABLE = 4;
+        NO_TOKENS = 5;
+        QUEUE_FULL = 6;
+        ENGINE_ERROR = 7; // errors that are not related to Gabriel but rather to the engine itself.
+    }
+
+    message Result {
+        PayloadType payload_type = 1;
+        string engine_name = 2;
+        bytes payload = 3;
+    }
+
+
+    int64 frame_id = 1;
+    Status status = 2;
+    repeated Result results = 3;
+    google.protobuf.Any engine_fields = 4; // engine needs to be able to pass state back to client.
+    Timestamps s2c_timestamps = 5;
+    Timestamps c2s_timestamps = 6;
+}
+
+
+message ToClient {
+    ResultWrapper result_wrapper = 1;
+    int32 num_tokens = 2;
+    Timestamps timestamps = 3;
+}
+
+message ToFromEngine {
+    string host = 1;
+    int32 port = 2;
+    oneof client_message {
+        FromClient from_client = 3;
+    	ResultWrapper result_wrapper = 4;
+    }
+}

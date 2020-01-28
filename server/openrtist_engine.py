@@ -35,6 +35,7 @@ import logging
 from gabriel_server import cognitive_engine
 from gabriel_protocol import gabriel_pb2
 from openrtist_protocol import openrtist_pb2
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +69,7 @@ class OpenrtistEngine(cognitive_engine.Engine):
             openrtist_pb2.EngineFields, from_client
         )
 
+        
         new_style = False
         send_style_list = False
         if engine_fields.style == "?":
@@ -100,10 +102,14 @@ class OpenrtistEngine(cognitive_engine.Engine):
             for k, v in self.adapter.get_all_styles().items():
                 engine_fields.style_list[k] = v
 
+        send_time = time.time()
+        engine_fields.timestamps.received = msg_recv_time
+        engine_fields.timestamps.sent = send_time
         result_wrapper = gabriel_pb2.ResultWrapper()
         result_wrapper.frame_id = from_client.frame_id
         result_wrapper.status = gabriel_pb2.ResultWrapper.Status.SUCCESS
         result_wrapper.results.append(result)
+        result_wrapper.c2s_timestamps.CopyFrom(from_client.timestamps)
         result_wrapper.engine_fields.Pack(engine_fields)
 
         return result_wrapper
