@@ -2,6 +2,7 @@ from openrtist_engine import OpenrtistEngine
 import time
 import os
 import signal
+import numpy as np
 
 class TimingEngine(OpenrtistEngine):
     def __init__(self, compression_params, adapter):
@@ -18,7 +19,7 @@ class TimingEngine(OpenrtistEngine):
         #self.LOG_FILENAME = os.path.join(LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
         #self.log_frame = open(LOG_FILENAME.format("frame"), "w")
         #self.log_avg = open(LOG_FILENAME.format("avg"), "w")
-
+        self.totals = []
 
     def handle(self, from_client):
         self.t0 = time.time()
@@ -48,6 +49,10 @@ class TimingEngine(OpenrtistEngine):
             log_msg += "avg fps: {0:.2f}".format((self.count-self.lastcount)/(self.t3-self.lastprint))
             if not self.is_first:
                 print(log_msg, file=self.log_avg)
+                self.totals.append((self.t3-self.t0)*1000)
+                if len(self.totals) > 5:
+                    t = np.array(self.totals)
+                    print("Mean {} Std {} Variance{}".format(np.mean(t), np.std(t), np.var(t)))
             self.is_first = False
             self.lastcount = self.count
             self.lastprint = self.t3
