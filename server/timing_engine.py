@@ -31,10 +31,14 @@ class TimingEngine(OpenrtistEngine):
             print("Logging ...")
             if self.log_avg:
                 self.log_avg.close()
-            self.is_first = True
+            self.is_first = False
             LOG_FILENAME = os.path.join(self.LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
             #self.log_frame = open(LOG_FILENAME.format("frame", self.res), "w")
+            print("Resolution {}".format(self.res))
+            if self.log_avg:
+                self.log_avg.close()
             self.log_avg = open(LOG_FILENAME.format("avg", self.res), "w")
+            print(LOG_FILENAME.format("avg", self.res))
             self.totals = []
 
         #log_frame = "Send:Rcv {}:{} Latency".format(from_client.time_send_client,)
@@ -50,17 +54,17 @@ class TimingEngine(OpenrtistEngine):
         if self.t3 - self.lastprint > 5:
             log_msg += "avg fps: {0:.2f}".format((self.count-self.lastcount)/(self.t3-self.lastprint))
             if not self.is_first:
-                if self.log_avg:
-                    self.log_avg.close()
-                LOG_FILENAME = os.path.join(self.LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
+                #LOG_FILENAME = os.path.join(self.LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
                 #self.log_frame = open(LOG_FILENAME.format("frame", self.res), "w")
-                self.log_avg = open(LOG_FILENAME.format("avg", self.res), "w")
+                #self.log_avg = open(LOG_FILENAME.format("avg", self.res), "w")
+                print(log_msg)#, file=self.log_avg)
                 print(log_msg, file=self.log_avg)
                 self.totals.append((self.t3-self.t0)*1000)
-                if len(self.totals) > 8:
+                if len(self.totals) > 5:
                     t = np.array(self.totals)
                     print(log_msg)
                     print("Mean {} Std {} Variance{}".format(np.mean(t), np.std(t), np.var(t)))
+                    print("Mean {} Std {} Variance{}".format(np.mean(t), np.std(t), np.var(t)), file=self.log_avg)
 
             self.is_first = False
             self.lastcount = self.count
@@ -70,7 +74,7 @@ class TimingEngine(OpenrtistEngine):
 
         return result
 
-    def inference(self, preprocessed, res=240):
+    def inference(self, preprocessed, res):
         self.t1 = time.time()
         result = super().inference(preprocessed)
         self.t2 = time.time()
