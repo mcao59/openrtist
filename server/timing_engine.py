@@ -20,6 +20,7 @@ class TimingEngine(OpenrtistEngine):
         #self.log_frame = open(LOG_FILENAME.format("frame"), "w")
         #self.log_avg = open(LOG_FILENAME.format("avg"), "w")
         self.totals = []
+        self.res = 0
 
     def handle(self, from_client):
         self.t0 = time.time()
@@ -50,9 +51,12 @@ class TimingEngine(OpenrtistEngine):
             if not self.is_first:
                 print(log_msg, file=self.log_avg)
                 self.totals.append((self.t3-self.t0)*1000)
-                if len(self.totals) > 5:
+                if len(self.totals) > 10:
                     t = np.array(self.totals)
+                    print(log_msg)
                     print("Mean {} Std {} Variance{}".format(np.mean(t), np.std(t), np.var(t)))
+                    self.totals = []
+
             self.is_first = False
             self.lastcount = self.count
             self.lastprint = self.t3
@@ -65,6 +69,8 @@ class TimingEngine(OpenrtistEngine):
         self.t1 = time.time()
         result = super().inference(preprocessed)
         self.t2 = time.time()
-        self.res = res
-
+        if res != self.res:
+            self.res = res
+            self.is_first = True
+            self.totals = []
         return result
