@@ -27,7 +27,7 @@ class TimingEngine(OpenrtistEngine):
         result = super().handle(from_client)
         self.t3 = time.time()
 
-        if from_client.frame_id == 0:
+        if from_client.frame_id == 0 or self.is_first:
             print("Logging ...")
             if self.log_avg:
                 self.log_avg.close()
@@ -35,6 +35,7 @@ class TimingEngine(OpenrtistEngine):
             LOG_FILENAME = os.path.join(self.LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
             #self.log_frame = open(LOG_FILENAME.format("frame", self.res), "w")
             self.log_avg = open(LOG_FILENAME.format("avg", self.res), "w")
+            self.totals = []
 
         #log_frame = "Send:Rcv {}:{} Latency".format(from_client.time_send_client,)
 
@@ -49,13 +50,17 @@ class TimingEngine(OpenrtistEngine):
         if self.t3 - self.lastprint > 5:
             log_msg += "avg fps: {0:.2f}".format((self.count-self.lastcount)/(self.t3-self.lastprint))
             if not self.is_first:
+                if self.log_avg:
+                    self.log_avg.close()
+                LOG_FILENAME = os.path.join(self.LOG_PATH, time.strftime("%Y%m%d-%H%M%S")+"-{}-{}.txt")
+                #self.log_frame = open(LOG_FILENAME.format("frame", self.res), "w")
+                self.log_avg = open(LOG_FILENAME.format("avg", self.res), "w")
                 print(log_msg, file=self.log_avg)
                 self.totals.append((self.t3-self.t0)*1000)
-                if len(self.totals) > 10:
+                if len(self.totals) > 8:
                     t = np.array(self.totals)
                     print(log_msg)
                     print("Mean {} Std {} Variance{}".format(np.mean(t), np.std(t), np.var(t)))
-                    self.totals = []
 
             self.is_first = False
             self.lastcount = self.count
