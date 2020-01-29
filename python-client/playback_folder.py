@@ -73,7 +73,7 @@ def main():
         try:
             timing_client.launch()
         except KeyboardInterrupt:
-            timing_client.compute_avg_rtt()
+            timing_client.print_rtt() #compute_avg_rtt()
     else:
         client = WebsocketClient(
             args.server_ip, config.PORT, adapter.producer, adapter.consumer
