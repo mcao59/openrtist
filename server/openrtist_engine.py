@@ -69,7 +69,7 @@ class OpenrtistEngine(cognitive_engine.Engine):
             openrtist_pb2.EngineFields, from_client
         )
 
-        
+
         new_style = False
         send_style_list = False
         if engine_fields.style == "?":
@@ -122,7 +122,7 @@ class OpenrtistEngine(cognitive_engine.Engine):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         preprocessed = self.adapter.preprocessing(img)
-        post_inference = self.inference(preprocessed)
+        post_inference = self.inference(preprocessed, img.shape[0])
         img_out = self.adapter.postprocessing(post_inference)
         return img_out
 

@@ -15,7 +15,7 @@ websockets_logger.setLevel(logging.INFO)
 
 
 class WebsocketClient:
-    def __init__(self, host, port, producer, consumer):
+    def __init__(self, host, port, producer, consumer, timeout=0):
         '''
         producer should take no arguments.
         consumer should take one gabriel_pb2.ResultWrapper argument.
@@ -29,6 +29,7 @@ class WebsocketClient:
         self._event_loop = asyncio.get_event_loop()
         self.producer = producer
         self.consumer = consumer
+        self.timeout = timeout
 
     def launch(self):
 
@@ -99,7 +100,7 @@ class WebsocketClient:
         '''
         try:
             while self._running:
-                await asyncio.sleep(0)  # Allow consumer to be scheduled
+                await asyncio.sleep(self.timeout)  # Allow consumer to be scheduled
                 await self._get_token()
 
                 from_client = self.producer()
