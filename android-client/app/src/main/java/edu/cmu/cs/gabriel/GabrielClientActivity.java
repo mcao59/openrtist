@@ -43,6 +43,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -72,6 +73,8 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.media.MediaActionSound;
 
+import androidx.annotation.RequiresApi;
+
 import edu.cmu.cs.gabriel.network.EngineInput;
 import edu.cmu.cs.gabriel.network.FrameSupplier;
 import edu.cmu.cs.gabriel.network.NetworkProtocol;
@@ -84,6 +87,8 @@ import edu.cmu.cs.localtransfer.Utils;
 import edu.cmu.cs.openrtist.R;
 
 import static edu.cmu.cs.gabriel.client.Util.ValidateEndpoint;
+
+import edu.cmu.cs.gabriel.client.comm.ScpHelper;
 
 public class GabrielClientActivity extends Activity implements AdapterView.OnItemSelectedListener,TextureView.SurfaceTextureListener {
 
@@ -535,6 +540,7 @@ public class GabrielClientActivity extends Activity implements AdapterView.OnIte
 
 
 
+//    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onPause() {
         Log.v(LOG_TAG, "++onPause");

@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':client'
+project(':client').projectDir = new File(settingsDir,'../../gabriel-android-common/client')
