@@ -1,2 +1,3 @@
-include ':app', ':client'
+include ':app', ':client', ':cliostore'
 project(':client').projectDir = new File(settingsDir,'../../gabriel-android-common/client')
+project(':cliostore').projectDir = new File(settingsDir,'../../CliostoreJV')
