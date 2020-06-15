@@ -1,6 +1,7 @@
 package edu.cmu.cs.gabriel;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -25,6 +26,7 @@ import static edu.cmu.cs.gabriel.client.Util.ValidateEndpoint;
 public class TimingClientActivity extends GabrielClientActivity {
     private TimingComm timingComm;
 
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     void setupComm() {
@@ -33,13 +35,13 @@ public class TimingClientActivity extends GabrielClientActivity {
         // Get info to capture in the log
         // Think this should be in new class
 
-        // This may be a bad idea -- had to do to get influxdb to work.
+        // TODO: This may be a bad idea -- had to do to get influxdb to work.
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
+        // Make sure have appropriate permissions TODO Need better response to not having permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
             return;
@@ -48,27 +50,21 @@ public class TimingClientActivity extends GabrielClientActivity {
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             return;
         }
+        // TODO Use or Delete -- these didn't seem to work or weren't useful
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 //            requestPermissions(new String[] {Manifest.permission.READ_PHONE_STATE}, 0);
 //            return;
 //        }
 //        TelephonyManager teleMan = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-//
 //        List<CellInfo> cellInfo = teleMan.getAllCellInfo();
-//
 //        SubscriptionManager subMan = (SubscriptionManager) this.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 //        List<SubscriptionInfo> subInfo = subMan.getActiveSubscriptionInfoList();
+
+        // Get helpers to send to Timing Server TODO May be more elegant way to do this
         ConnectivityManager conMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-
         LocationManager locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationHelper locHelper = new LocationHelper();
         locMan.requestLocationUpdates("gps",1000, (float) 1, locHelper);
-        List<String> locProviders = locMan.getAllProviders();
-        Location locationGPS = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        Location locationNet = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-
 
         this.timingComm = new TimingComm(serverURL, conMan, locMan,this, this.returnMsgHandler,
                 Const.TOKEN_LIMIT);
