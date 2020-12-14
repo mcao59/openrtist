@@ -73,6 +73,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import edu.cmu.cs.gabriel.Const;
@@ -141,10 +142,10 @@ public class GabrielClientActivity extends AppCompatActivity implements
 
     private final List<String> styleIds = new ArrayList<>(Collections.singletonList("none"));
 
-    public void addStyles(Set<Map.Entry<String, String>> entrySet) {
+    public void addStyles(Map<String, String> stylesMap) {
         this.styleType = "none";
-        for (Map.Entry<String, String> entry : entrySet) {
-            Log.v(LOG_TAG, "style: " + entry.getKey() + ", desc: " + entry.getValue());
+        Map<String, String> sorted = new TreeMap<String, String>(stylesMap);
+        for (Map.Entry<String, String> entry : sorted.entrySet()) {
             styleDescriptions.add(entry.getValue().trim());
             styleIds.add(entry.getKey().trim());
         }

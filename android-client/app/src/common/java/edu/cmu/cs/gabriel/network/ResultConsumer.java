@@ -48,7 +48,7 @@ public class ResultConsumer implements Consumer<ResultWrapper> {
 
             if (!Const.STYLES_RETRIEVED && (extras.getStyleListCount() > 0)) {
                 Const.STYLES_RETRIEVED = true;
-                this.gabrielClientActivity.addStyles(extras.getStyleListMap().entrySet());
+                this.gabrielClientActivity.addStyles(extras.getStyleListMap());
             }
         }  catch (InvalidProtocolBufferException e) {
             Log.e(TAG, "Protobuf Error", e);
