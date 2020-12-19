@@ -723,6 +723,14 @@ public class GabrielClientActivity extends AppCompatActivity implements
     final private ImageAnalysis.Analyzer analyzer = new ImageAnalysis.Analyzer() {
         @Override
         public void analyze(@NonNull ImageProxy image) {
+
+            // avoid mirror effect when using front camera
+            if (Const.USING_FRONT_CAMERA) {
+                imgView.setScaleX(-1);
+            } else {
+                imgView.setScaleX(1);
+            }
+
             if (styleType.equals("?") || !styleType.equals("none")) {
                 if (runLocally && !styleType.equals("?")) {
                     if (!localRunnerBusy) {
